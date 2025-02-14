@@ -1,33 +1,44 @@
-import { AppShell, Burger } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-import { HeaderMegaMenu } from '../navbar/NavBar';
+import { AppShell } from '@mantine/core';
+import { NavBar } from '../navbar/NavBar';
+import { RouteSwitcher } from '../router';
+import { Footer } from '../footer/Footer';
 
 export function Demo() {
-    const [opened, { toggle }] = useDisclosure();
-
     return (
         <AppShell
             header={{ height: 60 }}
-            // navbar={{
-            //     width: 300,
-            //     breakpoint: 'sm',
-            //     collapsed: { mobile: !opened },
-            // }}
             padding="md"
         >
             <AppShell.Header>
-                {/* <Burger
-                    opened={opened}
-                    onClick={toggle}
-                    hiddenFrom="sm"
-                    size="sm"
-                />
-                <div>Logo</div> */}
-                <HeaderMegaMenu />
+                <NavBar />
             </AppShell.Header>
-            {/* <AppShell.Navbar>
-            </AppShell.Navbar> */}
-            <AppShell.Main>Main</AppShell.Main>
+
+            <AppShell.Main>
+                <RouteSwitcher />
+            </AppShell.Main>
+            <AppShell.Footer>
+                <Footer></Footer>
+            </AppShell.Footer>
+        </AppShell>
+    );
+}
+
+export function Demo2() {
+    return (
+        <AppShell
+            header={{ height: 60 }}
+            padding="md"
+        >
+            <AppShell.Header>
+                <NavBar />
+            </AppShell.Header>
+
+            <AppShell.Main>
+                <RouteSwitcher />
+            </AppShell.Main>
+            <AppShell.Footer>
+                
+            </AppShell.Footer>
         </AppShell>
     );
 }

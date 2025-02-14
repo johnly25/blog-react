@@ -1,13 +1,15 @@
 import './App.css'
-import { HeaderMenu } from './components/navbar/NavBar'
 import '@mantine/core/styles.css';
 import { MantineProvider } from '@mantine/core';
-import { Demo } from './components/appshell/AppShell';
-function App() {
+import { routes } from './routes';
+import AuthProvider from "./provider/authProvider";
 
+function App() {
   return (
-    <MantineProvider theme={{ colorScheme: 'dark' }} withGlobalStyles withNormalizeCSS>
-      <Demo />
+    <MantineProvider defaultColorScheme="dark" >
+      <AuthProvider>
+        {routes}
+      </AuthProvider>
     </MantineProvider>
   )
 }
