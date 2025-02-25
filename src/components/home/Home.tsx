@@ -1,13 +1,21 @@
 import { Layout } from "../layout/Layout";
+import { Button, Group } from '@mantine/core';
 
 
 export function Home() {
-    const component = <> Main Page </>
     return (
         <Layout>
-            <>
-                {component}
-            </>
+            <HomePageContent />
         </Layout>
     )
 }
+
+function HomePageContent() {
+
+    return (
+        <Group>
+            <Group>Hello Testing</Group>
+        </Group>
+    )
+}
+

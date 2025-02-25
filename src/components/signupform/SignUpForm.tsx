@@ -101,17 +101,17 @@ function FormSection2({ setSignedUp }) {
             const response = await fetch(base + '/users', {
                 method: 'post',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(
-                    {
-                        firstname: signupInfo.firstname,
-                        lastname: signupInfo.lastname,
-                        username: signupInfo.username,
-                        password: signupInfo.password,
-                        passwordConfirm: signupInfo.confirmpassword,
-                        email: signupInfo.email,
-                        author: signupInfo.author,
-                    }
-                )
+            body: JSON.stringify(
+                {
+                    firstname: signupInfo.firstname,
+                    lastname: signupInfo.lastname,
+                    username: signupInfo.username,
+                    password: signupInfo.password,
+                    passwordConfirm: signupInfo.confirmpassword,
+                    email: signupInfo.email,
+                    author: signupInfo.author,
+                }
+            )
             })
             return response.json();
         } catch (e) {

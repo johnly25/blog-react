@@ -13,6 +13,7 @@ import classes from './AuthForm.module.css';
 import { useState } from 'react';
 import { useAuth } from '../../provider/authProvider';
 import { useNavigate } from 'react-router';
+import axios from 'axios';
 
 const base = import.meta.env.VITE_BACKEND_API_URL_BASE
 
@@ -55,27 +56,27 @@ export function AuthSection() {
     const handleSubmit = async (e) => {
         e.preventDefault()
         const response = await loginUser()
-        if(response.token != undefined) {
-            setToken(response.token)
+        if (response?.data.token != undefined) {
+            setToken(response.data.token)
             navigate("/", { replace: true });
         } else {
-            //unsuccessful 
+            console.log(response)
+            console.log('unsuccesful login')
         }
     }
 
     const loginUser = async () => {
         try {
-            const response = await fetch(base + '/auth/login/password', {
-                method: 'post',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(
-                    {
-                        username: loginInfo.username,
-                        password: loginInfo.password,
-                    }
-                )
-            })
-            return response.json();
+            const response = await axios.post(base + '/auth/login/password',
+                {
+                    username: loginInfo.username,
+                    password: loginInfo.password,
+                },
+                {
+                    headers: { 'Content-Type': 'application/json' },
+                    withCredentials: true  // This allows sending cookies with the request
+                });
+            return response;
         } catch (e) {
             console.log(e)
         }
@@ -90,7 +91,7 @@ export function AuthSection() {
                     </Title>
                     <TextInput label="Username" placeholder="username" size="md" value={loginInfo.username} name="username" onChange={handleInputChange} />
                     <PasswordInput label="Password" placeholder="password" mt="md" size="md" value={loginInfo.password} name="password" onChange={handleInputChange} />
-                    <Checkbox label="Keep me logged in" mt="xl" size="md" name='stayLogged' checked={loginInfo.stayLogged} onChange={handleCheckboxChange}/>
+                    <Checkbox label="Keep me logged in" mt="xl" size="md" name='stayLogged' checked={loginInfo.stayLogged} onChange={handleCheckboxChange} />
                     <Button fullWidth mt="xl" size="md" type='submit'>
                         Login
                     </Button>

@@ -1,14 +1,15 @@
-import { Routes, Route, Outlet, Navigate} from "react-router";
+import { Routes, Route, Outlet, Navigate } from "react-router";
 import { AuthForm } from "../components/authform/AuthForm";
 import { Home } from "../components/home/Home";
 import { SignUpForm } from "../components/signupform/SignUpForm";
 import { Layout } from "../components/layout/Layout";
 import { ProtectedRoute } from "./ProtectedRoute";
+import { useAuth } from "../provider/authProvider";
 
 const NonAuthRoutes = () => {
-    let auth = { 'token': false }
+    const { token } = useAuth()
     return (
-        auth.token ? <Navigate to='/' /> : <Outlet />
+        token ? <Navigate to='/' /> : <Outlet />
     )
 }
 
