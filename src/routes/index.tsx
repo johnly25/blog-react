@@ -5,6 +5,7 @@ import { SignUpForm } from "../components/signupform/SignUpForm";
 import { Layout } from "../components/layout/Layout";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { useAuth } from "../provider/authProvider";
+import { Post } from "../components/post/post";
 
 const NonAuthRoutes = () => {
     const { token } = useAuth()
@@ -18,6 +19,7 @@ export const routes =
     <Routes>
         <Route element={<ProtectedRoute />}>
             <Route path="/welcome" element={<>Hello Welcome User!</>} />
+            <Route path="/posts/:postId" element={<Post/>} />
         </Route>
 
         <Route element={<NonAuthRoutes />}>

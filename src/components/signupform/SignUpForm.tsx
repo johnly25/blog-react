@@ -11,6 +11,7 @@ import { Layout } from '../layout/Layout';
 import classes from './SignUpForm.module.css';
 import { useState } from 'react';
 import { Link } from 'react-router';
+import { useForm } from '@mantine/form';
 
 const base = import.meta.env.VITE_BACKEND_API_URL_BASE
 
@@ -52,41 +53,22 @@ function ThankYou() {
 
 function FormSection2({ setSignedUp }) {
     const [signUpErrors, setSignUpErrors] = useState([])
-    const [signupInfo, setSignUpInfo] = useState({
-        firstname: "",
-        lastname: "",
-        email: "",
-        username: "",
-        password: "",
-        confirmpassword: "",
-        author: false,
-    });
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        console.log(e.target)
-        setSignUpInfo({
-            ...signupInfo,
-            [name]: value
-        })
-    }
+    const form = useForm({
+        mode: 'uncontrolled',
+        initialValues: {
+            firstname: "",
+            lastname: "",
+            email: "",
+            username: "",
+            password: "",
+            confirmpassword: "",
+            author: true,
+        },
+    })
 
-    const handleCheckboxChange = (e) => {
-        const { name, checked } = e.target;
-        console.log(e.target.checked)
-        setSignUpInfo({
-            ...signupInfo,
-            [name]: checked
-        })
-    }
-
-    const ObjectIsEmpty = (obj): boolean => {
-        return JSON.stringify(obj) === "{}"
-    }
-
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        const response = await addUser()
+    const handleSubmit = async (values) => {
+        const response = await addUser(values)
         console.log(response)
         if (hasErrors(response)) {
             setSignUpErrors(response.errors)
@@ -96,22 +78,22 @@ function FormSection2({ setSignedUp }) {
         }
     }
 
-    const addUser = async () => {
+    const addUser = async (values) => {
         try {
             const response = await fetch(base + '/users', {
                 method: 'post',
                 headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(
-                {
-                    firstname: signupInfo.firstname,
-                    lastname: signupInfo.lastname,
-                    username: signupInfo.username,
-                    password: signupInfo.password,
-                    passwordConfirm: signupInfo.confirmpassword,
-                    email: signupInfo.email,
-                    author: signupInfo.author,
-                }
-            )
+                body: JSON.stringify(
+                    {
+                        firstname: values.firstname,
+                        lastname: values.lastname,
+                        username: values.username,
+                        password: values.password,
+                        passwordConfirm: values.confirmpassword,
+                        email: values.email,
+                        author: values.author,
+                    }
+                )
             })
             return response.json();
         } catch (e) {
@@ -122,24 +104,24 @@ function FormSection2({ setSignedUp }) {
     const hasErrors = (response): boolean => {
         return response.hasOwnProperty('errors')
     }
-
+    
     const errors = signUpErrors.map((error, index) => <li key={index}>{error.msg}: {error.path}</li>)
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={form.onSubmit(handleSubmit)}>
             <Title order={2} className={classes.title} ta="center" mt="md" mb={50}>
                 Sign up
             </Title>
             {errors}
             <SimpleGrid cols={2}>
-                <TextInput label="First Name" placeholder="John" size="md" name="firstname" value={signupInfo.firstname} onChange={handleInputChange} />
-                <TextInput label="Last Name" placeholder="Smith" size="md" name="lastname" value={signupInfo.lastname} onChange={handleInputChange} />
+                <TextInput label="First Name" placeholder="John" size="md" name="firstname" key={form.key('firstname')} {...form.getInputProps('firstname')} />
+                <TextInput label="Last Name" placeholder="Smith" size="md" name="lastname" key={form.key('lastname')} {...form.getInputProps('lastname')} />
             </SimpleGrid>
-            <TextInput label="Email address" placeholder="hello@gmail.com" mt="md" size="md" name="email" value={signupInfo.email} onChange={handleInputChange} />
-            <TextInput label="Username" placeholder="kazuha" mt="md" size="md" name="username" value={signupInfo.username} onChange={handleInputChange} />
-            <PasswordInput label="Password" placeholder="Your password" mt="md" size="md" name="password" value={signupInfo.password} onChange={handleInputChange} />
-            <PasswordInput label="Confirm Password" placeholder="Your password" mt="md" size="md" name="confirmpassword" value={signupInfo.confirmpassword} onChange={handleInputChange} />
-            <Checkbox label="Become an Author?" mt="md" name='author' checked={signupInfo.author} onChange={handleCheckboxChange} />
+            <TextInput label="Email address" placeholder="hello@gmail.com" mt="md" size="md" name="email" key={form.key('email')} {...form.getInputProps('email')} />
+            <TextInput label="Username" placeholder="kazuha" mt="md" size="md" name="username" key={form.key('username')} {...form.getInputProps('username')} />
+            <PasswordInput label="Password" placeholder="Your password" mt="md" size="md" name="password" key={form.key('password')} {...form.getInputProps('password')} />
+            <PasswordInput label="Confirm Password" placeholder="Your password" mt="md" size="md" name="confirmpassword" key={form.key('confirmpassword')} {...form.getInputProps('confirmpassword')} />
+            <Checkbox label="Become an Author?" mt="md" name='author' key={form.key('author')} {...form.getInputProps('author', { type: 'checkbox' })} />
             <Button fullWidth mt="xl" size="md" type='submit'>
                 Signup
             </Button>

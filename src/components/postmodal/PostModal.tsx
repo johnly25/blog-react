@@ -1,5 +1,5 @@
 import { useDisclosure, useCounter } from '@mantine/hooks';
-import { Modal, Button, Group, Text, Badge, SimpleGrid, TextInput, Textarea } from '@mantine/core';
+import { Modal, Button, Group, Text, Badge, SimpleGrid, TextInput, Textarea, Container } from '@mantine/core';
 import { useAuth } from '../../provider/authProvider';
 import axios from 'axios';
 import { useState } from 'react';
@@ -15,35 +15,20 @@ interface PostModalProps {
 
 export function PostModal({ opened, open, close }: PostModalProps) {
     const { token } = useAuth();
-    const [postInfo, setPostInfo] = useState({
-        title: "this is title",
-        body: "",
-    });
-
     const form = useForm({
         mode: 'uncontrolled',
         initialValues: {
-            title: 'this is',
+            title: '',
             body: '',
         },
     })
     const published = true;
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        console.log(e.target)
-        setPostInfo({
-            ...postInfo,
-            [name]: value
-        })
-    }
-
-    const handeSubmit = async (e: any) => {
-        console.log('submitting', e)
+    const handleSubmit = async (values: any) => {
         try {
             const response = await axios.post(base + "/posts/", {
-                title: postInfo.title,
-                body: postInfo.body,
+                title: values.title,
+                body: values.body,
                 published: published,
             }, {
                 withCredentials: true,
@@ -52,13 +37,22 @@ export function PostModal({ opened, open, close }: PostModalProps) {
             showNotification2()
             console.log(response.data)
         } catch (e) {
+            close()
+            showErrorNotification()
             console.log("Error:", e)
         }
     }
-    const handleSubmit2 = async (values: any) => {
-        console.log(values)
+    const showErrorNotification = () => {
+        const position = 'top-right'
+        console.log('clicked')
+        showNotification({
+            title: 'Not Published',
+            color: 'red',
+            message: 'Your post has not been published!',
+            withCloseButton: false,
+        })
     }
-
+    
     const showNotification2 = () => {
         const position = 'top-right'
         console.log('clicked')
@@ -67,14 +61,14 @@ export function PostModal({ opened, open, close }: PostModalProps) {
             message: 'Your post has been published!',
             withCloseButton: false,
         })
-
     }
+    
     return (
         <>
-            <Notifications />
+            <Notifications position='top-left'/>
             <Modal opened={opened} onClose={close} size="70%" title="Add New Post">
                 <SimpleGrid cols={{ base: 1 }} spacing={10}>
-                    <form onSubmit={form.onSubmit((values) => handleSubmit2(values))}>
+                    <form onSubmit={form.onSubmit(handleSubmit)}>
                         <TextInput
                             label="Title"
                             placeholder="Title"
@@ -95,7 +89,7 @@ export function PostModal({ opened, open, close }: PostModalProps) {
                         />
 
                         <Group justify="flex-end" mt="md">
-                            <Button  type='submit'>Post</Button>
+                            <Button type='submit'>Post</Button>
                         </Group>
                     </form>
                 </SimpleGrid>

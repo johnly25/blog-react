@@ -4,10 +4,7 @@ import { createContext, SetStateAction, useContext, useEffect, useMemo, useState
 const AuthContext = createContext<any>(null);
 
 const AuthProvider = ({ children }: any) => {
-  // State to hold the authentication token
   const [token, setToken_] = useState(localStorage.getItem("token"));
-
-  // Function to set the authentication token
   const setToken = (newToken: string) => {
     setToken_(newToken);
   };

@@ -55,12 +55,11 @@ export function AuthSection() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const response = await loginUser()
-        if (response?.data.token != undefined) {
-            setToken(response.data.token)
+        const responseData = await loginUser()
+        if (responseData?.token != undefined) {
+            setToken(responseData.token)
             navigate("/", { replace: true });
         } else {
-            console.log(response)
             console.log('unsuccesful login')
         }
     }
@@ -76,10 +75,9 @@ export function AuthSection() {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true  // This allows sending cookies with the request
                 });
-            return response;
-        } catch (e) {
-            console.log(e)
-        }
+            console.log(response.data)
+            return response.data;
+        } catch (e) {}
     }
 
     return (

@@ -25,7 +25,7 @@ export const UserProvider = ({ children }: any) => {
         (() => {
             if (token) {
                 axios.get(base + "/users/profile", {
-                    withCredentials: true,  // Required for cookies or authentication headers
+                    withCredentials: true,
                 })
                     .then(response => {
                         setUser(response.data)
@@ -35,11 +35,9 @@ export const UserProvider = ({ children }: any) => {
                     });
             } else {
                 setUser(null)
-                console.log('no token')
             }
         })();
     }, [token])
-
     return (
         <UserContext.Provider value={{ user, setUser }}>
             {children}
